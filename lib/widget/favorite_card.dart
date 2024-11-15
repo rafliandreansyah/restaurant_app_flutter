@@ -12,6 +12,9 @@ class FavoriteCard extends StatelessWidget {
           padding: const EdgeInsets.only(
             bottom: 16,
           ),
+          margin: EdgeInsets.symmetric(
+            vertical: 10,
+          ),
           width: 150,
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.onPrimary,
@@ -22,6 +25,17 @@ class FavoriteCard extends StatelessWidget {
               color: Theme.of(context).colorScheme.surfaceContainer,
               width: 1,
             ),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).colorScheme.surfaceContainerLow,
+                blurRadius: 6,
+                spreadRadius: 1,
+                offset: const Offset(
+                  0,
+                  4,
+                ),
+              ),
+            ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

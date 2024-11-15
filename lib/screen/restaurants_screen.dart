@@ -1,10 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:restaurant_app/widget/search_text_field.dart';
+import 'package:restaurant_app/widget/section_title.dart';
 import 'package:restaurant_app/widget/favorite_card.dart';
 
-class RestaurantsScreen extends StatelessWidget {
+class RestaurantsScreen extends StatefulWidget {
   const RestaurantsScreen({super.key});
 
+  @override
+  State<RestaurantsScreen> createState() => _RestaurantsScreenState();
+}
+
+class _RestaurantsScreenState extends State<RestaurantsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,10 +29,10 @@ class RestaurantsScreen extends StatelessWidget {
                   children: [
                     Text(
                       'Find the best restaurants near you...',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge
-                          ?.copyWith(fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                          ),
                     ),
                     const SizedBox(
                       height: 22,
@@ -50,67 +57,9 @@ class RestaurantsScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintStyle: TextStyle(
-                            color: Colors.grey[400],
-                            fontSize: 14,
-                            letterSpacing: 0.5,
-                          ),
-                          hintText: 'Search...',
-                          contentPadding: const EdgeInsets.symmetric(
-                            vertical: 1,
-                          ),
-                          prefixIcon: Icon(
-                            CupertinoIcons.search,
-                            color: Colors.grey[400],
-                            size: 18,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(
-                                50,
-                              ),
-                            ),
-                            borderSide: BorderSide(
-                              color: Colors.grey[400]!,
-                              width: 1,
-                            ),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(
-                                50,
-                              ),
-                            ),
-                            borderSide: BorderSide(
-                              color: Colors.grey[200]!,
-                              width: 1,
-                            ),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(
-                                50,
-                              ),
-                            ),
-                            borderSide: BorderSide(
-                              color: Colors.grey[400]!,
-                              width: 1,
-                            ),
-                          ),
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(
-                                50,
-                              ),
-                            ),
-                            borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.error,
-                              width: 1,
-                            ),
-                          ),
-                        ),
+                      child: const SearchTextField(
+                        isEnabled: false,
+                        hint: 'Search...',
                       ),
                     ),
                   ],
@@ -122,30 +71,19 @@ class RestaurantsScreen extends StatelessWidget {
                 height: 40,
               ),
             ),
-            SliverToBoxAdapter(
+            const SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(
+                padding: EdgeInsets.symmetric(
                   horizontal: 30,
                 ),
-                child: Text(
-                  'Favourite',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                ),
-              ),
-            ),
-            const SliverToBoxAdapter(
-              child: SizedBox(
-                height: 8,
+                child: SectionTitle(title: 'Favourite'),
               ),
             ),
             SliverToBoxAdapter(
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Container(
-                  margin: EdgeInsets.symmetric(
+                  margin: const EdgeInsets.symmetric(
                     horizontal: 30,
                   ),
                   child: Row(
@@ -160,7 +98,20 @@ class RestaurantsScreen extends StatelessWidget {
                   ),
                 ),
               ),
-            )
+            ),
+            const SliverToBoxAdapter(
+              child: SizedBox(
+                height: 40,
+              ),
+            ),
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 30,
+                ),
+                child: SectionTitle(title: 'Recommended'),
+              ),
+            ),
           ],
         ),
       ),
