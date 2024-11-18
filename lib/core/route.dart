@@ -1,1 +1,2 @@
-const SEARCH_SCREEN = "SearchScreen";
+const searchScreen = "SearchScreen";
+const detailRestaurantScreen = "DetailRestaurantScreen";

@@ -60,7 +60,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                       ),
                       child: GestureDetector(
                         onTap: () =>
-                            Navigator.of(context).pushNamed(SEARCH_SCREEN),
+                            Navigator.of(context).pushNamed(searchScreen),
                         child: const SearchTextField(
                           isEnabled: false,
                           hint: 'Search...',
@@ -123,11 +123,16 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
               ),
             ),
             SliverPadding(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 24,
               ),
               sliver: SliverList.builder(
-                itemBuilder: (context, index) => RestaurantCard(),
+                itemBuilder: (context, index) => GestureDetector(
+                  onTap: () => Navigator.of(context).pushNamed(
+                    detailRestaurantScreen,
+                  ),
+                  child: RestaurantCard(),
+                ),
                 itemCount: 5,
               ),
             )

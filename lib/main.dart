@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restaurant_app/core/route.dart';
+import 'package:restaurant_app/screen/detail_restaurant_screen.dart';
 import 'package:restaurant_app/screen/restaurants_screen.dart';
 import 'package:restaurant_app/screen/search_screen.dart';
 import 'package:restaurant_app/style/font.dart';
@@ -24,7 +25,8 @@ class MyApp extends StatelessWidget {
       initialRoute: "/",
       routes: {
         "/": (context) => const RestaurantsScreen(),
-        SEARCH_SCREEN: (context) => const SearchScreen(),
+        searchScreen: (context) => const SearchScreen(),
+        detailRestaurantScreen: (context) => const DetailRestaurantScreen(),
       },
     );
   }
