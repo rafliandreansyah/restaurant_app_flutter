@@ -1,5 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:restaurant_app/core/route.dart';
+import 'package:restaurant_app/widget/restaurant_card.dart';
 import 'package:restaurant_app/widget/search_text_field.dart';
 import 'package:restaurant_app/widget/section_title.dart';
 import 'package:restaurant_app/widget/favorite_card.dart';
@@ -21,8 +22,8 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.only(
-                  left: 30,
-                  right: 30,
+                  left: 24,
+                  right: 24,
                   top: 30,
                 ),
                 child: Column(
@@ -57,9 +58,13 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                           ),
                         ],
                       ),
-                      child: const SearchTextField(
-                        isEnabled: false,
-                        hint: 'Search...',
+                      child: GestureDetector(
+                        onTap: () =>
+                            Navigator.of(context).pushNamed(SEARCH_SCREEN),
+                        child: const SearchTextField(
+                          isEnabled: false,
+                          hint: 'Search...',
+                        ),
                       ),
                     ),
                   ],
@@ -74,7 +79,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
             const SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: 30,
+                  horizontal: 24,
                 ),
                 child: SectionTitle(title: 'Favourite'),
               ),
@@ -84,7 +89,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                 scrollDirection: Axis.horizontal,
                 child: Container(
                   margin: const EdgeInsets.symmetric(
-                    horizontal: 30,
+                    horizontal: 24,
                   ),
                   child: Row(
                     children: [
@@ -107,11 +112,25 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
             const SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: 30,
+                  horizontal: 24,
                 ),
                 child: SectionTitle(title: 'Recommended'),
               ),
             ),
+            const SliverToBoxAdapter(
+              child: SizedBox(
+                height: 8,
+              ),
+            ),
+            SliverPadding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 24,
+              ),
+              sliver: SliverList.builder(
+                itemBuilder: (context, index) => RestaurantCard(),
+                itemCount: 5,
+              ),
+            )
           ],
         ),
       ),

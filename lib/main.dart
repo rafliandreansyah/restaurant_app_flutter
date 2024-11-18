@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant_app/core/route.dart';
 import 'package:restaurant_app/screen/restaurants_screen.dart';
+import 'package:restaurant_app/screen/search_screen.dart';
 import 'package:restaurant_app/style/font.dart';
 import 'package:restaurant_app/style/theme.dart';
 
@@ -18,8 +20,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Restaurant Finder',
       theme: brightness == Brightness.light ? theme.light() : theme.dark(),
-      home: const RestaurantsScreen(),
       debugShowCheckedModeBanner: false,
+      initialRoute: "/",
+      routes: {
+        "/": (context) => const RestaurantsScreen(),
+        SEARCH_SCREEN: (context) => const SearchScreen(),
+      },
     );
   }
 }

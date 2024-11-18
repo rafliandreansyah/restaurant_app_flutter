@@ -5,16 +5,19 @@ class SearchTextField extends StatelessWidget {
   final TextEditingController? textEditingController;
   final String? hint;
   final bool isEnabled;
+  final TextInputAction textInputAction;
   const SearchTextField({
     super.key,
     this.textEditingController,
     this.isEnabled = true,
     this.hint,
+    this.textInputAction = TextInputAction.done,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      textInputAction: textInputAction,
       enabled: isEnabled,
       controller: textEditingController,
       decoration: InputDecoration(

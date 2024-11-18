@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:restaurant_app/widget/rating.dart';
 
 class FavoriteCard extends StatelessWidget {
   const FavoriteCard({super.key});
@@ -12,7 +12,7 @@ class FavoriteCard extends StatelessWidget {
           padding: const EdgeInsets.only(
             bottom: 16,
           ),
-          margin: EdgeInsets.symmetric(
+          margin: const EdgeInsets.symmetric(
             vertical: 10,
           ),
           width: 150,
@@ -22,7 +22,7 @@ class FavoriteCard extends StatelessWidget {
               10,
             ),
             border: Border.all(
-              color: Theme.of(context).colorScheme.surfaceContainer,
+              color: Theme.of(context).colorScheme.outlineVariant,
               width: 1,
             ),
             boxShadow: [
@@ -48,7 +48,6 @@ class FavoriteCard extends StatelessWidget {
                 child: Image.network(
                   'https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg?auto=compress&cs=tinysrgb&w=600',
                   fit: BoxFit.cover,
-                  height: 150,
                 ),
               ),
               const SizedBox(
@@ -74,19 +73,8 @@ class FavoriteCard extends StatelessWidget {
                     Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        RatingBar.builder(
-                          initialRating: 4,
-                          itemSize: 12,
-                          itemPadding: const EdgeInsets.symmetric(
-                            horizontal: 0,
-                          ),
-                          itemBuilder: (context, _) => const Icon(
-                            Icons.star,
-                            color: Colors.amberAccent,
-                          ),
-                          onRatingUpdate: (rating) {
-                            print(rating);
-                          },
+                        const Rating(
+                          ignoreGestures: true,
                         ),
                         const SizedBox(
                           width: 4,
