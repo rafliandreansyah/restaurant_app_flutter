@@ -110,7 +110,7 @@ class RestaurantCard extends StatelessWidget {
                 Text(
                   'Medan',
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.tertiaryContainer,
+                        color: Theme.of(context).colorScheme.secondary,
                       ),
                 ),
               ]),

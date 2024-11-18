@@ -17,8 +17,10 @@ class _SearchScreenState extends State<SearchScreen> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 24,
+          padding: const EdgeInsets.only(
+            left: 24,
+            right: 24,
+            top: 24,
           ),
           child: Column(
             children: [
