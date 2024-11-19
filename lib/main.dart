@@ -1,13 +1,53 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:provider/provider.dart';
 import 'package:restaurant_app/core/route.dart';
+import 'package:restaurant_app/data/source/network/api_client.dart';
+import 'package:restaurant_app/provider/restaurant_provider.dart';
 import 'package:restaurant_app/screen/detail_restaurant_screen.dart';
 import 'package:restaurant_app/screen/restaurants_screen.dart';
+import 'package:restaurant_app/screen/review_screen.dart';
 import 'package:restaurant_app/screen/search_screen.dart';
 import 'package:restaurant_app/style/font.dart';
 import 'package:restaurant_app/style/theme.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+  final dioConf = configureDio();
+  final apiClient = ApiClient(
+    dio: dioConf,
+  );
+
+  runApp(
+    MultiProvider(
+      providers: [
+        Provider(
+          create: (_) => RestaurantProvider(
+            apiClient: apiClient,
+          ),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
+}
+
+Dio configureDio() {
+  final options = BaseOptions(
+    baseUrl: 'https://restaurant-api.dicoding.dev',
+    connectTimeout: const Duration(minutes: 1),
+    receiveTimeout: const Duration(minutes: 2),
+  );
+
+  final dio = Dio(options);
+  dio.interceptors.add(PrettyDioLogger());
+
+  return dio;
 }
 
 class MyApp extends StatelessWidget {
@@ -27,6 +67,7 @@ class MyApp extends StatelessWidget {
         "/": (context) => const RestaurantsScreen(),
         searchScreen: (context) => const SearchScreen(),
         detailRestaurantScreen: (context) => const DetailRestaurantScreen(),
+        reviewScreen: (context) => const ReviewScreen(),
       },
     );
   }

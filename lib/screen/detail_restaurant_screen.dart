@@ -1,8 +1,8 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:restaurant_app/core/route.dart';
 import 'package:restaurant_app/widget/menu_card.dart';
 import 'package:restaurant_app/widget/rating.dart';
+import 'package:restaurant_app/widget/review_card.dart';
 import 'package:restaurant_app/widget/section_title.dart';
 
 class DetailRestaurantScreen extends StatelessWidget {
@@ -207,22 +207,6 @@ class DetailRestaurantScreen extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(
-                            height: 10,
-                          ),
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton.icon(
-                              onPressed: () {},
-                              label: const Text(
-                                'Direction',
-                              ),
-                              icon: const Icon(
-                                Icons.arrow_circle_right_rounded,
-                              ),
-                              iconAlignment: IconAlignment.end,
-                            ),
-                          ),
-                          const SizedBox(
                             height: 40,
                           ),
                           const SectionTitle(
@@ -268,6 +252,69 @@ class DetailRestaurantScreen extends StatelessWidget {
                           const SizedBox(
                             height: 40,
                           ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const SectionTitle(title: 'Reviews'),
+                              Row(
+                                children: [
+                                  Rating(
+                                    ignoreGestures: true,
+                                    itemSize: 16,
+                                    itemCount: 1,
+                                    initialRating: 1,
+                                  ),
+                                  const SizedBox(
+                                    width: 4,
+                                  ),
+                                  Text(
+                                    '4.7',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.copyWith(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          SizedBox(
+                            height: 200,
+                            child: ListView.separated(
+                              shrinkWrap: true,
+                              itemBuilder: (context, index) => ReviewCard(),
+                              itemCount: 5,
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(
+                                width: 16,
+                              ),
+                              scrollDirection: Axis.horizontal,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              onPressed: () {
+                                Navigator.of(context).pushNamed(reviewScreen);
+                              },
+                              label: const Text(
+                                'Post Your Review',
+                              ),
+                              icon: const Icon(
+                                Icons.star_border_rounded,
+                              ),
+                              iconAlignment: IconAlignment.end,
+                            ),
+                          )
                         ],
                       ),
                     ),
