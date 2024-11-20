@@ -6,12 +6,14 @@ class SearchTextField extends StatelessWidget {
   final String? hint;
   final bool isEnabled;
   final TextInputAction textInputAction;
+  final Function(String)? onSubmitted;
   const SearchTextField({
     super.key,
     this.textEditingController,
     this.isEnabled = true,
     this.hint,
     this.textInputAction = TextInputAction.done,
+    this.onSubmitted,
   });
 
   @override
@@ -20,6 +22,7 @@ class SearchTextField extends StatelessWidget {
       textInputAction: textInputAction,
       enabled: isEnabled,
       controller: textEditingController,
+      onSubmitted: onSubmitted,
       decoration: InputDecoration(
         hintStyle: TextStyle(
           color: Colors.grey[400],

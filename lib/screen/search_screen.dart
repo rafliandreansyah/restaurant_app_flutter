@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
+import 'package:restaurant_app/core/route.dart';
+import 'package:restaurant_app/data/model/response/restaurants_response.dart';
+import 'package:restaurant_app/provider/restaurant_provider.dart';
+import 'package:restaurant_app/provider/state/search_restaurant/search_restaurant_state.dart';
 import 'package:restaurant_app/widget/restaurant_card.dart';
 import 'package:restaurant_app/widget/search_text_field.dart';
 
@@ -11,6 +17,16 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<RestaurantProvider>().resetStateSearch();
+  }
+
+  void _searchRestaurant(value) {
+    context.read<RestaurantProvider>().searchRestaurants(value);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,17 +72,62 @@ class _SearchScreenState extends State<SearchScreen> {
                   textEditingController: _controller,
                   hint: 'Search...',
                   textInputAction: TextInputAction.search,
+                  onSubmitted: _searchRestaurant,
                 ),
               ),
-              // Expanded(
-              //   child: ListView.builder(
-              //     padding: const EdgeInsets.symmetric(
-              //       vertical: 30,
-              //     ),
-              //     itemBuilder: (context, index) => RestaurantCard(),
-              //     itemCount: 4,
-              //   ),
-              // ),
+              Expanded(
+                child: Consumer<RestaurantProvider>(
+                  builder: (context, value, child) {
+                    final state = value.searchListRestaurantState;
+                    final logger = Logger();
+                    logger.e(state);
+                    if (state is SearchListRestaurantLoadingState) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (state is SearchListRestaurantSuccessState) {
+                      return ListView.builder(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 30,
+                        ),
+                        itemBuilder: (context, index) {
+                          final restaurantSearch = state.restaurants[index];
+
+                          return GestureDetector(
+                            onTap: () => Navigator.of(context).pushNamed(
+                              detailRestaurantScreen,
+                              arguments: restaurantSearch.id,
+                            ),
+                            child: RestaurantCard(
+                              restaurant: Restaurant(
+                                id: restaurantSearch.id,
+                                name: restaurantSearch.name,
+                                rating: restaurantSearch.rating,
+                                pictureId: restaurantSearch.pictureId,
+                                city: restaurantSearch.city,
+                                description: restaurantSearch.description,
+                              ),
+                            ),
+                          );
+                        },
+                        itemCount: state.restaurants.length,
+                      );
+                    } else if (state is SearchListRestaurantErrorState) {
+                      return Center(
+                        child: Text(state.error),
+                      );
+                    } else if (state is SearchListRestaurantNoneState) {
+                      return const Center(
+                        child: Text('Please search restaurant do you want!'),
+                      );
+                    } else {
+                      return const Center(
+                        child: Text('Please search restaurant do you want!'),
+                      );
+                    }
+                  },
+                ),
+              )
             ],
           ),
         ),
