@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant_app/core/url.dart';
 import 'package:restaurant_app/widget/rating.dart';
+import 'package:shimmer_image/shimmer_image.dart';
+
+import '../data/model/response/restaurants_response.dart';
 
 class RestaurantCard extends StatelessWidget {
-  const RestaurantCard({super.key});
+  final Restaurant restaurant;
+  const RestaurantCard({super.key, required this.restaurant});
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +47,13 @@ class RestaurantCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(
                 20,
               ),
-              child: Image.network(
-                'https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg?auto=compress&cs=tinysrgb&w=600',
+              child: ProgressiveImage(
+                width: double.infinity,
+                image: smallResolutionImage(
+                  restaurant.pictureId ?? '',
+                ),
                 fit: BoxFit.cover,
+                height: double.infinity,
               ),
             ),
           ),
@@ -55,7 +64,7 @@ class RestaurantCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'MoonBean\'s Coffee',
+                restaurant.name ?? '',
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -67,13 +76,14 @@ class RestaurantCard extends StatelessWidget {
               Wrap(
                 children: [
                   Rating(
+                    initialRating: restaurant.rating ?? 0,
                     ignoreGestures: true,
                   ),
                   const SizedBox(
                     width: 4,
                   ),
                   Text(
-                    '4.7',
+                    '${restaurant.rating ?? 0}',
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
@@ -108,7 +118,7 @@ class RestaurantCard extends StatelessWidget {
                   width: 8,
                 ),
                 Text(
-                  'Medan',
+                  restaurant.city ?? '',
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
                         color: Theme.of(context).colorScheme.secondary,
                       ),

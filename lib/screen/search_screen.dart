@@ -58,15 +58,15 @@ class _SearchScreenState extends State<SearchScreen> {
                   textInputAction: TextInputAction.search,
                 ),
               ),
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 30,
-                  ),
-                  itemBuilder: (context, index) => RestaurantCard(),
-                  itemCount: 4,
-                ),
-              ),
+              // Expanded(
+              //   child: ListView.builder(
+              //     padding: const EdgeInsets.symmetric(
+              //       vertical: 30,
+              //     ),
+              //     itemBuilder: (context, index) => RestaurantCard(),
+              //     itemCount: 4,
+              //   ),
+              // ),
             ],
           ),
         ),

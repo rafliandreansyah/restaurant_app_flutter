@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/core/route.dart';
@@ -14,6 +15,7 @@ import 'package:restaurant_app/style/font.dart';
 import 'package:restaurant_app/style/theme.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -26,7 +28,7 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
-        Provider(
+        ChangeNotifierProvider(
           create: (_) => RestaurantProvider(
             apiClient: apiClient,
           ),
@@ -69,6 +71,7 @@ class MyApp extends StatelessWidget {
         detailRestaurantScreen: (context) => const DetailRestaurantScreen(),
         reviewScreen: (context) => const ReviewScreen(),
       },
+      builder: EasyLoading.init(),
     );
   }
 }

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
 import 'package:restaurant_app/core/route.dart';
+import 'package:restaurant_app/provider/restaurant_provider.dart';
+import 'package:restaurant_app/provider/state/list_restaurant/list_restaurant_state.dart';
 import 'package:restaurant_app/widget/restaurant_card.dart';
 import 'package:restaurant_app/widget/search_text_field.dart';
 import 'package:restaurant_app/widget/section_title.dart';
@@ -13,6 +17,17 @@ class RestaurantsScreen extends StatefulWidget {
 }
 
 class _RestaurantsScreenState extends State<RestaurantsScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      if (mounted) {
+        context.read<RestaurantProvider>().getListRestaurants();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,66 +91,108 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                 height: 40,
               ),
             ),
-            const SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 24,
-                ),
-                child: SectionTitle(title: 'Favourite'),
-              ),
-            ),
             SliverToBoxAdapter(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Container(
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                  ),
-                  child: Row(
+              child: Consumer<RestaurantProvider>(
+                  builder: (context, value, child) {
+                final state = value.listRestaurantState;
+                if (state is ListRestaurantLoadingState) {
+                  EasyLoading.show(status: 'loading...');
+                  return Container();
+                } else if (state is ListRestaurantSuccessState) {
+                  EasyLoading.dismiss();
+
+                  if (state.restaurants.isEmpty) {
+                    return const Center(
+                      child: Text('No restaurants found'),
+                    );
+                  }
+
+                  final favoriteRestaurant = [];
+
+                  if (state.restaurants.length > 5) {
+                    final favoriteRestaurantSublist =
+                        state.restaurants.sublist(0, 5);
+                    for (var data in favoriteRestaurantSublist) {
+                      favoriteRestaurant.add(data);
+                    }
+                  } else {
+                    for (var restaurant in state.restaurants) {
+                      favoriteRestaurant.add(restaurant);
+                    }
+                  }
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      for (var i = 0; i < 6; i++) ...[
-                        FavoriteCard(),
-                        SizedBox(
-                          width: 16,
+                      const Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 24,
                         ),
-                      ],
+                        child: SectionTitle(title: 'Favourite'),
+                      ),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                          ),
+                          child: Row(
+                            children: [
+                              for (var i = 0;
+                                  i < favoriteRestaurant.length;
+                                  i++) ...[
+                                FavoriteCard(
+                                    favoriteRestaurant: favoriteRestaurant[i]),
+                                const SizedBox(
+                                  width: 16,
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 24,
+                        ),
+                        child: SectionTitle(title: 'Recommended'),
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                        ),
+                        child: ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) => GestureDetector(
+                            onTap: () => Navigator.of(context).pushNamed(
+                              detailRestaurantScreen,
+                            ),
+                            child: RestaurantCard(
+                                restaurant: state.restaurants[index]),
+                          ),
+                          itemCount: state.restaurants.length,
+                        ),
+                      )
                     ],
-                  ),
-                ),
-              ),
+                  );
+                } else if (state is ListRestaurantErrorState) {
+                  EasyLoading.dismiss();
+                  return Center(
+                    child: Text(state.error),
+                  );
+                } else {
+                  EasyLoading.dismiss();
+                  return Container();
+                }
+              }),
             ),
-            const SliverToBoxAdapter(
-              child: SizedBox(
-                height: 40,
-              ),
-            ),
-            const SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 24,
-                ),
-                child: SectionTitle(title: 'Recommended'),
-              ),
-            ),
-            const SliverToBoxAdapter(
-              child: SizedBox(
-                height: 8,
-              ),
-            ),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24,
-              ),
-              sliver: SliverList.builder(
-                itemBuilder: (context, index) => GestureDetector(
-                  onTap: () => Navigator.of(context).pushNamed(
-                    detailRestaurantScreen,
-                  ),
-                  child: RestaurantCard(),
-                ),
-                itemCount: 5,
-              ),
-            )
           ],
         ),
       ),
