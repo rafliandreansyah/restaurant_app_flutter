@@ -68,7 +68,13 @@ class MyApp extends StatelessWidget {
       routes: {
         "/": (context) => const RestaurantsScreen(),
         searchScreen: (context) => const SearchScreen(),
-        detailRestaurantScreen: (context) => const DetailRestaurantScreen(),
+        detailRestaurantScreen: (context) {
+          final restaurantId =
+              ModalRoute.of(context)?.settings.arguments as String;
+          return DetailRestaurantScreen(
+            restaurantId: restaurantId,
+          );
+        },
         reviewScreen: (context) => const ReviewScreen(),
       },
       builder: EasyLoading.init(),

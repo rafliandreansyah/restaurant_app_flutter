@@ -141,8 +141,15 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                               for (var i = 0;
                                   i < favoriteRestaurant.length;
                                   i++) ...[
-                                FavoriteCard(
-                                    favoriteRestaurant: favoriteRestaurant[i]),
+                                GestureDetector(
+                                  onTap: () => Navigator.of(context).pushNamed(
+                                      detailRestaurantScreen,
+                                      arguments:
+                                          favoriteRestaurant[i].id ?? ''),
+                                  child: FavoriteCard(
+                                      favoriteRestaurant:
+                                          favoriteRestaurant[i]),
+                                ),
                                 const SizedBox(
                                   width: 16,
                                 ),
@@ -173,6 +180,7 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                           itemBuilder: (context, index) => GestureDetector(
                             onTap: () => Navigator.of(context).pushNamed(
                               detailRestaurantScreen,
+                              arguments: state.restaurants[index].id ?? '',
                             ),
                             child: RestaurantCard(
                                 restaurant: state.restaurants[index]),

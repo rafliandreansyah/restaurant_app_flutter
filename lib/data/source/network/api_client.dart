@@ -39,7 +39,7 @@ class ApiClient {
       String restaurantId) async {
     try {
       final response = await dio.get('/detail/$restaurantId');
-      return RestaurantDetailResponse.fromJson(response.data);
+      return RestaurantDetailResponse.fromMap(response.data);
     } on DioException catch (e, stackhttp) {
       logger.e(e.toString(), stackTrace: stackhttp);
       if (e.response != null) {
@@ -61,7 +61,7 @@ class ApiClient {
   FutureOr<SearchRestaurantsResponse> searchRestaurants(String query) async {
     try {
       final response = await dio.get('/search', queryParameters: {'q': query});
-      return SearchRestaurantsResponse.fromJson(response.data);
+      return SearchRestaurantsResponse.fromMap(response.data);
     } on DioException catch (e, stackhttp) {
       logger.e(e.toString(), stackTrace: stackhttp);
       if (e.response != null) {
@@ -83,7 +83,7 @@ class ApiClient {
   FutureOr<ReviewResponse> addReview(ReviewRequest reviewRequest) async {
     try {
       final response = await dio.post('/review', data: reviewRequest.toMap());
-      return ReviewResponse.fromJson(
+      return ReviewResponse.fromMap(
         response.data,
       );
     } on DioException catch (e, stackhttp) {

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant_app/data/model/response/restaurant_detail_response.dart';
 
 class ReviewCard extends StatelessWidget {
-  const ReviewCard({super.key});
+  final CustomerReview customerReview;
+  const ReviewCard(this.customerReview, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +56,7 @@ class ReviewCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Adam Wathan',
+                          customerReview.name ?? '',
                           style:
                               Theme.of(context).textTheme.bodyMedium?.copyWith(
                                     fontSize: 16,
@@ -63,7 +65,7 @@ class ReviewCard extends StatelessWidget {
                           overflow: TextOverflow.clip,
                         ),
                         Text(
-                          '12 Juli 2023',
+                          customerReview.date ?? '',
                           style: Theme.of(context)
                               .textTheme
                               .labelMedium
@@ -81,7 +83,7 @@ class ReviewCard extends StatelessWidget {
                 height: 16,
               ),
               Text(
-                'I absolutely love this app! The UI is very intuitive and the features are well-implemented.',
+                customerReview.review ?? '',
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(
                       color: Theme.of(context).colorScheme.outline,
                       fontSize: 12,
