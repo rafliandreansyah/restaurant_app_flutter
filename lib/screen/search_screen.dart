@@ -6,6 +6,7 @@ import 'package:restaurant_app/core/route.dart';
 import 'package:restaurant_app/data/model/response/restaurants_response.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
 import 'package:restaurant_app/provider/state/search_restaurant/search_restaurant_state.dart';
+import 'package:restaurant_app/widget/platform_container.dart';
 import 'package:restaurant_app/widget/restaurant_card.dart';
 import 'package:restaurant_app/widget/search_text_field.dart';
 
@@ -61,126 +62,129 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(
-            left: 24,
-            right: 24,
-            top: 24,
-          ),
-          child: Column(
-            children: [
-              Text(
-                'Find your favorite restaurant...',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
-                    ),
-              ),
-              const SizedBox(
-                height: 22,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(
-                    50,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Theme.of(context).colorScheme.surfaceContainerLow,
-                      blurRadius: 5,
-                      spreadRadius: 1,
-                      offset: const Offset(
-                        0,
-                        5,
+        child: PlatformContainer(
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: 24,
+              right: 24,
+              top: 24,
+            ),
+            child: Column(
+              children: [
+                Text(
+                  'Find your favorite restaurant...',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
                       ),
+                ),
+                const SizedBox(
+                  height: 22,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    borderRadius: BorderRadius.circular(
+                      50,
                     ),
-                  ],
-                ),
-                child: SearchTextField(
-                  textEditingController: _controller,
-                  hint: 'Search...',
-                  textInputAction: TextInputAction.search,
-                  onSubmitted: _searchRestaurant,
-                ),
-              ),
-              Expanded(
-                child: Consumer<RestaurantProvider>(
-                  builder: (context, value, child) {
-                    final state = value.searchListRestaurantState;
-                    final logger = Logger();
-                    logger.e(state);
-                    if (state is SearchListRestaurantLoadingState) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else if (state is SearchListRestaurantSuccessState) {
-                      if (state.restaurants.isEmpty) {
-                        return Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Lottie.asset(
-                                'assets/lottie/lottie_search_empty.json',
-                                width: 150,
-                                height: 150,
-                                fit: BoxFit.fill,
-                              ),
-                              Center(
-                                child: Text(
-                                  'Your restaurants not found! Please try again to search with other name.',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                      return ListView.builder(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 30,
+                    boxShadow: [
+                      BoxShadow(
+                        color:
+                            Theme.of(context).colorScheme.surfaceContainerLow,
+                        blurRadius: 5,
+                        spreadRadius: 1,
+                        offset: const Offset(
+                          0,
+                          5,
                         ),
-                        itemBuilder: (context, index) {
-                          final restaurantSearch = state.restaurants[index];
-
-                          return GestureDetector(
-                            onTap: () => Navigator.of(context).pushNamed(
-                              detailRestaurantScreen,
-                              arguments: restaurantSearch.id,
-                            ),
-                            child: RestaurantCard(
-                              restaurant: Restaurant(
-                                id: restaurantSearch.id,
-                                name: restaurantSearch.name,
-                                rating: restaurantSearch.rating,
-                                pictureId: restaurantSearch.pictureId,
-                                city: restaurantSearch.city,
-                                description: restaurantSearch.description,
-                              ),
+                      ),
+                    ],
+                  ),
+                  child: SearchTextField(
+                    textEditingController: _controller,
+                    hint: 'Search...',
+                    textInputAction: TextInputAction.search,
+                    onSubmitted: _searchRestaurant,
+                  ),
+                ),
+                Expanded(
+                  child: Consumer<RestaurantProvider>(
+                    builder: (context, value, child) {
+                      final state = value.searchListRestaurantState;
+                      final logger = Logger();
+                      logger.e(state);
+                      if (state is SearchListRestaurantLoadingState) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (state is SearchListRestaurantSuccessState) {
+                        if (state.restaurants.isEmpty) {
+                          return Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Lottie.asset(
+                                  'assets/lottie/lottie_search_empty.json',
+                                  width: 150,
+                                  height: 150,
+                                  fit: BoxFit.fill,
+                                ),
+                                Center(
+                                  child: Text(
+                                    'Your restaurants not found! Please try again to search with other name.',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ],
                             ),
                           );
-                        },
-                        itemCount: state.restaurants.length,
-                      );
-                    } else if (state is SearchListRestaurantErrorState) {
-                      return Center(
-                        child: Text(state.error),
-                      );
-                    } else if (state is SearchListRestaurantNoneState) {
-                      return _searchLottiePlaceHolder();
-                    } else {
-                      return _searchLottiePlaceHolder();
-                    }
-                  },
-                ),
-              )
-            ],
+                        }
+                        return ListView.builder(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 30,
+                          ),
+                          itemBuilder: (context, index) {
+                            final restaurantSearch = state.restaurants[index];
+
+                            return GestureDetector(
+                              onTap: () => Navigator.of(context).pushNamed(
+                                detailRestaurantScreen,
+                                arguments: restaurantSearch.id,
+                              ),
+                              child: RestaurantCard(
+                                restaurant: Restaurant(
+                                  id: restaurantSearch.id,
+                                  name: restaurantSearch.name,
+                                  rating: restaurantSearch.rating,
+                                  pictureId: restaurantSearch.pictureId,
+                                  city: restaurantSearch.city,
+                                  description: restaurantSearch.description,
+                                ),
+                              ),
+                            );
+                          },
+                          itemCount: state.restaurants.length,
+                        );
+                      } else if (state is SearchListRestaurantErrorState) {
+                        return Center(
+                          child: Text(state.error),
+                        );
+                      } else if (state is SearchListRestaurantNoneState) {
+                        return _searchLottiePlaceHolder();
+                      } else {
+                        return _searchLottiePlaceHolder();
+                      }
+                    },
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
