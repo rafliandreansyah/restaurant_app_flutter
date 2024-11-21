@@ -40,7 +40,6 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   dio: ^5.7.0
   pretty_dio_logger: ^1.4.0
-  connectivity_plus: ^6.1.0
   flutter_easyloading: ^3.0.5
   logger: ^2.5.0
   shimmer_image: ^0.0.2
