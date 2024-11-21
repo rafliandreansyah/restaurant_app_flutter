@@ -36,6 +36,7 @@ class ReviewCard extends StatelessWidget {
             ],
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
@@ -91,6 +92,7 @@ class ReviewCard extends StatelessWidget {
                     ),
                 maxLines: 4,
                 overflow: TextOverflow.clip,
+                textAlign: TextAlign.start,
               ),
             ],
           ),

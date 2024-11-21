@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/core/route.dart';
 import 'package:restaurant_app/data/model/response/restaurants_response.dart';
@@ -17,6 +18,34 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _controller = TextEditingController();
+
+  Widget _searchLottiePlaceHolder() {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Lottie.asset(
+            'assets/lottie/lottie_search.json',
+            width: 120,
+            height: 120,
+            fit: BoxFit.fill,
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          Center(
+            child: Text(
+              'Please search restaurant do you want!',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -86,6 +115,33 @@ class _SearchScreenState extends State<SearchScreen> {
                         child: CircularProgressIndicator(),
                       );
                     } else if (state is SearchListRestaurantSuccessState) {
+                      if (state.restaurants.isEmpty) {
+                        return Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Lottie.asset(
+                                'assets/lottie/lottie_search_empty.json',
+                                width: 150,
+                                height: 150,
+                                fit: BoxFit.fill,
+                              ),
+                              Center(
+                                child: Text(
+                                  'Your restaurants not found! Please try again to search with other name.',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
                       return ListView.builder(
                         padding: const EdgeInsets.symmetric(
                           vertical: 30,
@@ -117,13 +173,9 @@ class _SearchScreenState extends State<SearchScreen> {
                         child: Text(state.error),
                       );
                     } else if (state is SearchListRestaurantNoneState) {
-                      return const Center(
-                        child: Text('Please search restaurant do you want!'),
-                      );
+                      return _searchLottiePlaceHolder();
                     } else {
-                      return const Center(
-                        child: Text('Please search restaurant do you want!'),
-                      );
+                      return _searchLottiePlaceHolder();
                     }
                   },
                 ),

@@ -1,3 +1,5 @@
+const baseURL = 'https://restaurant-api.dicoding.dev';
+
 String smallResolutionImage(String pictureId) {
   return 'https://restaurant-api.dicoding.dev/images/small/$pictureId';
 }

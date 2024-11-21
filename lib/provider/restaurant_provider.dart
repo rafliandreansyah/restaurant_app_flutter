@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:restaurant_app/data/model/request/review_request.dart';
 import 'package:restaurant_app/data/model/response/restaurant_detail_response.dart';
 import 'package:restaurant_app/data/source/network/api_client.dart';
+import 'package:restaurant_app/provider/state/add_review/review_restaurant_state.dart';
 import 'package:restaurant_app/provider/state/detail_restaurant/detail_restaurant_state.dart';
 import 'package:restaurant_app/provider/state/list_restaurant/list_restaurant_state.dart';
 import 'package:restaurant_app/provider/state/search_restaurant/search_restaurant_state.dart';
@@ -19,6 +21,9 @@ class RestaurantProvider extends ChangeNotifier {
       SearchListRestaurantNoneState();
   SearchListRestaurantState get searchListRestaurantState =>
       _searchListRestaurantState;
+
+  ReviewRestaurantState _reviewRestaurantState = ReviewRestaurantNoneState();
+  ReviewRestaurantState get reviewRestaurantState => _reviewRestaurantState;
 
   Future<void> getListRestaurants() async {
     try {
@@ -91,5 +96,30 @@ class RestaurantProvider extends ChangeNotifier {
 
   void resetStateSearch() {
     _searchListRestaurantState = SearchListRestaurantNoneState();
+  }
+
+  void resetStateReview() {
+    _reviewRestaurantState = ReviewRestaurantNoneState();
+  }
+
+  Future<void> addReview(ReviewRequest reviewRequest) async {
+    try {
+      _reviewRestaurantState = ReviewRestaurantLoadingState();
+      notifyListeners();
+
+      final response = await apiClient.addReview(reviewRequest);
+      if (response.error != null && !response.error!) {
+        _reviewRestaurantState =
+            ReviewRestaurantSuccessState(reviewResponse: (response));
+      } else {
+        _reviewRestaurantState =
+            ReviewRestaurantErrorState(error: 'Failed to search restaurants');
+      }
+      notifyListeners();
+    } on Exception catch (_) {
+      _reviewRestaurantState =
+          ReviewRestaurantErrorState(error: 'Failed to search restaurants');
+      notifyListeners();
+    }
   }
 }

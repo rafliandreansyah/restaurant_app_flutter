@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:restaurant_app/core/route.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
 import 'package:restaurant_app/provider/state/list_restaurant/list_restaurant_state.dart';
+import 'package:restaurant_app/widget/empty.dart';
 import 'package:restaurant_app/widget/restaurant_card.dart';
 import 'package:restaurant_app/widget/search_text_field.dart';
 import 'package:restaurant_app/widget/section_title.dart';
@@ -102,8 +103,11 @@ class _RestaurantsScreenState extends State<RestaurantsScreen> {
                   EasyLoading.dismiss();
 
                   if (state.restaurants.isEmpty) {
-                    return const Center(
-                      child: Text('No restaurants found'),
+                    return const Expanded(
+                      child: Empty(
+                        message: 'Restaurant is empty',
+                        size: 200,
+                      ),
                     );
                   }
 

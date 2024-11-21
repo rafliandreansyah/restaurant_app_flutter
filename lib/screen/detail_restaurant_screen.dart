@@ -5,6 +5,7 @@ import 'package:restaurant_app/core/url.dart';
 import 'package:restaurant_app/data/model/response/restaurant_detail_response.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
 import 'package:restaurant_app/provider/state/detail_restaurant/detail_restaurant_state.dart';
+import 'package:restaurant_app/widget/empty.dart';
 import 'package:restaurant_app/widget/menu_card.dart';
 import 'package:restaurant_app/widget/rating.dart';
 import 'package:restaurant_app/widget/review_card.dart';
@@ -46,13 +47,16 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
           } else if (state is DetailRestaurantSuccessState) {
             return Stack(
               children: [
-                ProgressiveImage(
-                  width: double.infinity,
-                  image: mediumResolutionImage(
-                    state.restaurant.pictureId ?? '',
+                Hero(
+                  tag: state.restaurant.pictureId ?? '',
+                  child: ProgressiveImage(
+                    width: double.infinity,
+                    image: mediumResolutionImage(
+                      state.restaurant.pictureId ?? '',
+                    ),
+                    fit: BoxFit.cover,
+                    height: MediaQuery.of(context).size.height / 1.5,
                   ),
-                  fit: BoxFit.cover,
-                  height: MediaQuery.of(context).size.height / 1.5,
                 ),
                 CustomScrollView(
                   slivers: [
@@ -253,22 +257,29 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                                 const SizedBox(
                                   height: 16,
                                 ),
-                                ListView.separated(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) => MenuCard(
-                                    menuName: state.restaurant.menus
-                                            ?.foods?[index].name ??
-                                        '',
-                                  ),
-                                  itemCount:
-                                      state.restaurant.menus?.foods?.length ??
-                                          0,
-                                  shrinkWrap: true,
-                                  separatorBuilder: (context, index) =>
-                                      const SizedBox(
-                                    height: 16,
-                                  ),
-                                ),
+                                (state.restaurant.menus?.foods ?? []).isNotEmpty
+                                    ? ListView.separated(
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemBuilder: (context, index) =>
+                                            MenuCard(
+                                          menuName: state.restaurant.menus
+                                                  ?.foods?[index].name ??
+                                              '',
+                                        ),
+                                        itemCount: state.restaurant.menus?.foods
+                                                ?.length ??
+                                            0,
+                                        shrinkWrap: true,
+                                        separatorBuilder: (context, index) =>
+                                            const SizedBox(
+                                          height: 16,
+                                        ),
+                                      )
+                                    : const Empty(
+                                        message: 'Food menu is empty',
+                                        size: 150,
+                                      ),
                                 const SizedBox(
                                   height: 24,
                                 ),
@@ -278,23 +289,31 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                                 const SizedBox(
                                   height: 16,
                                 ),
-                                ListView.separated(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemBuilder: (context, index) => MenuCard(
-                                    menuName: state.restaurant.menus
-                                            ?.drinks?[index].name ??
-                                        '',
-                                    menuIcon: Icons.local_drink_rounded,
-                                  ),
-                                  itemCount:
-                                      state.restaurant.menus?.drinks?.length ??
-                                          0,
-                                  shrinkWrap: true,
-                                  separatorBuilder: (context, index) =>
-                                      const SizedBox(
-                                    height: 16,
-                                  ),
-                                ),
+                                (state.restaurant.menus?.drinks ?? [])
+                                        .isNotEmpty
+                                    ? ListView.separated(
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemBuilder: (context, index) =>
+                                            MenuCard(
+                                          menuName: state.restaurant.menus
+                                                  ?.drinks?[index].name ??
+                                              '',
+                                          menuIcon: Icons.local_drink_rounded,
+                                        ),
+                                        itemCount: state.restaurant.menus
+                                                ?.drinks?.length ??
+                                            0,
+                                        shrinkWrap: true,
+                                        separatorBuilder: (context, index) =>
+                                            const SizedBox(
+                                          height: 16,
+                                        ),
+                                      )
+                                    : const Empty(
+                                        message: 'Drink menu is empty',
+                                        size: 150,
+                                      ),
                                 const SizedBox(
                                   height: 40,
                                 ),
@@ -331,33 +350,56 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                                 const SizedBox(
                                   height: 16,
                                 ),
-                                SizedBox(
-                                  height: 200,
-                                  child: ListView.separated(
-                                    shrinkWrap: true,
-                                    itemBuilder: (context, index) => ReviewCard(
-                                        state.restaurant
-                                                .customerReviews?[index] ??
-                                            CustomerReview()),
-                                    itemCount: state.restaurant.customerReviews
-                                            ?.length ??
-                                        0,
-                                    separatorBuilder: (context, index) =>
-                                        const SizedBox(
-                                      width: 16,
-                                    ),
-                                    scrollDirection: Axis.horizontal,
-                                  ),
-                                ),
+                                (state.restaurant.customerReviews ?? [])
+                                        .isNotEmpty
+                                    ? SizedBox(
+                                        height: 200,
+                                        child: ListView.separated(
+                                          shrinkWrap: true,
+                                          itemBuilder: (context, index) =>
+                                              ReviewCard(state.restaurant
+                                                          .customerReviews?[
+                                                      index] ??
+                                                  CustomerReview()),
+                                          itemCount: state.restaurant
+                                                  .customerReviews?.length ??
+                                              0,
+                                          separatorBuilder: (context, index) =>
+                                              const SizedBox(
+                                            width: 16,
+                                          ),
+                                          scrollDirection: Axis.horizontal,
+                                        ),
+                                      )
+                                    : const Empty(
+                                        message: 'Review is empty',
+                                        size: 150,
+                                      ),
                                 const SizedBox(
                                   height: 8,
                                 ),
                                 SizedBox(
                                   width: double.infinity,
                                   child: ElevatedButton.icon(
-                                    onPressed: () {
-                                      Navigator.of(context)
-                                          .pushNamed(reviewScreen);
+                                    onPressed: () async {
+                                      final data =
+                                          await Navigator.of(context).pushNamed(
+                                        reviewScreen,
+                                        arguments: widget.restaurantId,
+                                      );
+                                      if (data != null &&
+                                          data is String &&
+                                          data == 'reload') {
+                                        Future.microtask(() {
+                                          if (context.mounted) {
+                                            context
+                                                .read<RestaurantProvider>()
+                                                .getDetailRestaurant(
+                                                  widget.restaurantId,
+                                                );
+                                          }
+                                        });
+                                      }
                                     },
                                     label: const Text(
                                       'Post Your Review',

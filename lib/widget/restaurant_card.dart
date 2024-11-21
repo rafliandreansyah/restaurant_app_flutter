@@ -47,13 +47,16 @@ class RestaurantCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(
                 20,
               ),
-              child: ProgressiveImage(
-                width: double.infinity,
-                image: smallResolutionImage(
-                  restaurant.pictureId ?? '',
+              child: Hero(
+                tag: restaurant.pictureId ?? '',
+                child: ProgressiveImage(
+                  width: double.infinity,
+                  image: smallResolutionImage(
+                    restaurant.pictureId ?? '',
+                  ),
+                  fit: BoxFit.cover,
+                  height: double.infinity,
                 ),
-                fit: BoxFit.cover,
-                height: double.infinity,
               ),
             ),
           ),

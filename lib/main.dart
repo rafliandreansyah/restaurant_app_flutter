@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:provider/provider.dart';
 import 'package:restaurant_app/core/route.dart';
+import 'package:restaurant_app/core/url.dart';
 import 'package:restaurant_app/data/source/network/api_client.dart';
 import 'package:restaurant_app/provider/restaurant_provider.dart';
 import 'package:restaurant_app/screen/detail_restaurant_screen.dart';
@@ -41,7 +42,7 @@ Future<void> main() async {
 
 Dio configureDio() {
   final options = BaseOptions(
-    baseUrl: 'https://restaurant-api.dicoding.dev',
+    baseUrl: baseURL,
     connectTimeout: const Duration(minutes: 1),
     receiveTimeout: const Duration(minutes: 2),
   );
@@ -75,7 +76,13 @@ class MyApp extends StatelessWidget {
             restaurantId: restaurantId,
           );
         },
-        reviewScreen: (context) => const ReviewScreen(),
+        reviewScreen: (context) {
+          final restaurantId =
+              ModalRoute.of(context)?.settings.arguments as String;
+          return ReviewScreen(
+            restaurantId: restaurantId,
+          );
+        },
       },
       builder: EasyLoading.init(),
     );
